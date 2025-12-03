@@ -8,7 +8,7 @@ public class Builtins {
 
     private static final Set<String> builtins = Set.of("exit", "echo", "type", "pwd");
     private static File currentDir = new File(System.getProperty("user.dir"));
-    private static String homeVar = System.getenv("USERPROFILE");
+    private static File homeVar = new File(System.getProperty("user.home"));
 
     public static boolean isBuiltin(String cmd) {
         return builtins.contains(cmd);
@@ -50,7 +50,8 @@ public class Builtins {
         Path newPath;
 
         if (dir.equals("~")) {
-            currentDir = new File(homeVar);
+            currentDir = homeVar;
+            return;
         }
 
         // absolute paths
