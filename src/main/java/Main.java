@@ -25,7 +25,7 @@ public class Main {
             } else {
                 // check for program and run 
                 String[] input = line.split(" ");
-                
+
                 if (!runProgram(input)) {
                     System.out.println(line + ": command not found");
                 }
@@ -41,7 +41,7 @@ public class Main {
         if (path == null) return false;
 
         List<String> cmd = new ArrayList<>();
-        cmd.add(path);
+        cmd.add(program);
         for (int i = 1; i < input.length; i++) {
             cmd.add(input[i]);
         }
