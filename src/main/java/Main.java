@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Main {
     public static Scanner scanner = new Scanner(System.in);
-    public static Set<String> commands = Set.of("exit", "echo", "type"); // immutable set 
+    public static Set<String> commands = Set.of("exit", "echo", "type", "pwd"); // immutable set 
     public static String[] dirs = System.getenv("PATH").split(File.pathSeparator);
 
     public static void main(String[] args) throws Exception {
