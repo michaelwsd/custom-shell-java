@@ -1,4 +1,7 @@
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 public class Builtins {
@@ -43,20 +46,21 @@ public class Builtins {
     }
 
     public static void runCd(String dir) {
-        File newDir = new File(dir);
+        Path newPath;
 
-        if (newDir.isAbsolute()) {
-            if (newDir.exists() && newDir.isDirectory()) {
-                currentDir = newDir;
-            }
+        // absolute paths
+        Path inputPath = Paths.get(dir);
+        if (!inputPath.isAbsolute()) {
+            inputPath = currentDir.toPath().resolve(dir); // combine relative path with currentDir
+        }
+
+        // normalize to remove "." and ".."
+        newPath = inputPath.normalize();
+
+        if (Files.exists(newPath) && Files.isDirectory(newPath)) {
+            currentDir = newPath.toFile();
         } else {
-            // check if it's a valid relative path
-            File relativeDir = new File(currentDir, dir);
-            if (relativeDir.exists() && relativeDir.isDirectory()) {
-                currentDir = relativeDir;
-            } else {
-                System.out.println("cd: " + dir + ": No such file or directory");
-            }
+            System.out.println("cd: " + dir + ": No such file or directory");
         }
     }
 
