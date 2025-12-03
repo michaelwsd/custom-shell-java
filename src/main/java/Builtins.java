@@ -34,19 +34,30 @@ public class Builtins {
 
         if (line.startsWith("cd ")) {
             String dir = line.substring(3);
-            File newDir = new File(dir);
-
-            if (newDir.isAbsolute() && newDir.exists() && newDir.isDirectory()) {
-                currentDir = newDir;
-            } else {
-                System.out.println("cd: " + dir + ": No such file or directory");
-            }
-
+            runCd(dir);
             return true;
             
         }
 
         return false; // not a builtin
+    }
+
+    public static void runCd(String dir) {
+        File newDir = new File(dir);
+
+        if (newDir.isAbsolute()) {
+            if (newDir.exists() && newDir.isDirectory()) {
+                currentDir = newDir;
+            }
+        } else {
+            // check if it's a valid relative path
+            File relativeDir = new File(currentDir, dir);
+            if (relativeDir.exists() && relativeDir.isDirectory()) {
+                currentDir = relativeDir;
+            } else {
+                System.out.println("cd: " + dir + ": No such file or directory");
+            }
+        }
     }
 
     public static void runType(String cmd) {
