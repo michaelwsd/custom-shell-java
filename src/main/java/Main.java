@@ -1,6 +1,6 @@
 import java.io.File;
-import java.nio.file.Files;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -22,13 +22,51 @@ public class Main {
             } else if (line.startsWith("type ")) {
                 String command = line.substring(5);
                 runType(command);  
-                
             } else {
-                System.out.println(line + ": command not found");
+                // check for program and run 
+                String[] input = line.split(" ");
+                
+                if (!runProgram(input)) {
+                    System.out.println(line + ": command not found");
+                }
             }
         }
 
         scanner.close();
+    }
+
+    public static boolean runProgram(String[] input) {
+        String program = input[0];
+        String path = findExecutable(program);
+        if (path == null) return false;
+
+        List<String> cmd = new ArrayList<>();
+        cmd.add(path);
+        for (int i = 1; i < input.length; i++) {
+            cmd.add(input[i]);
+        }
+
+        try {
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.inheritIO();
+            Process p = pb.start();
+            p.waitFor();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static String findExecutable(String cmd) {
+        for (String dir: dirs) {
+            File f = new File(dir, cmd); // checks if file exists in this directory
+
+            if (f.exists() && f.canExecute()) {
+                return f.getAbsolutePath();
+            }
+        }
+
+        return null;
     }
 
     public static void runType(String cmd) {
@@ -37,16 +75,12 @@ public class Main {
             return;
         } 
 
-        // search for files
-        for (String dir: dirs) {
-            File f = new File(dir, cmd); // checks if file exists in this directory
+        String found = findExecutable(cmd);
 
-            if (f.exists() && f.canExecute()) {
-                System.out.println(cmd + " is " + f.getAbsolutePath());
-                return;
-            }
-        }
-
-        System.out.println(cmd + ": not found");  
+        if (found != null) {
+            System.out.println(cmd + " is " + found);
+        } else {
+            System.out.println(cmd + ": not found");
+        }  
     }
 }
