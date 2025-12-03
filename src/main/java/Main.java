@@ -11,16 +11,10 @@ public class Main {
 
             if (line.isEmpty()) continue;
 
-            if (Builtins.handle(line)) {
-                // builtin was executed
-                continue;
-            }
-
-            // external program
-            String[] input = line.split("\\s+");
-
-            if (!Executor.runProgram(input)) {
-                System.out.println(line + ": command not found");
+            if (!Builtins.handle(line)) {
+                if (!Executor.runProgram(line)) {
+                    System.out.println(line + ": command not found");
+                }
             }
         }
     }

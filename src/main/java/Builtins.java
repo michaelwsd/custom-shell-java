@@ -2,17 +2,11 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
 
 public class Builtins {
 
-    private static final Set<String> builtins = Set.of("exit", "echo", "type", "pwd");
     private static File currentDir = new File(System.getProperty("user.dir"));
     private static File homeDir = new File(System.getenv("USERPROFILE"));
-
-    public static boolean isBuiltin(String cmd) {
-        return builtins.contains(cmd);
-    }
 
     // returns true if a builtin handled the line
     public static boolean handle(String line) {

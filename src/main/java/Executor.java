@@ -4,7 +4,8 @@ import java.util.List;
 
 public class Executor {
 
-    public static boolean runProgram(String[] input) {
+    public static boolean runProgram(String line) {
+        String[] input = line.split("\\s+");
         String program = input[0];
         String path = PathSearch.findExecutable(program);
 
