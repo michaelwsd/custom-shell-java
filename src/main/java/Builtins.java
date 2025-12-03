@@ -8,7 +8,7 @@ public class Builtins {
 
     private static final Set<String> builtins = Set.of("exit", "echo", "type", "pwd");
     private static File currentDir = new File(System.getProperty("user.dir"));
-    private static File homeDir = new File(System.getenv("HOME"));
+    private static File homeDir = new File(System.getenv("USERPROFILE"));
 
     public static boolean isBuiltin(String cmd) {
         return builtins.contains(cmd);
@@ -16,34 +16,31 @@ public class Builtins {
 
     // returns true if a builtin handled the line
     public static boolean handle(String line) {
-        if (line.equals("exit")) {
-            System.exit(0);
+        String[] parts = line.split("\\s+", 2);
+        CommandName command = CommandName.of(parts[0]);
+        String args = parts.length > 1 ? parts[1] : "";
+        
+        if (command == null) return false;
+
+        switch (command) {
+            case exit -> {
+                System.exit(0);
+            }
+            case echo -> {
+                System.out.println(args);
+            }
+            case pwd -> {
+                System.out.println(currentDir.getAbsolutePath());
+            }
+            case type -> {
+                runType(args);
+            }
+            case cd -> {
+                runCd(args.isEmpty() ? "~" : args);
+            }
         }
 
-        if (line.startsWith("echo ")) {
-            System.out.println(line.substring(5));
-            return true;
-        }
-
-        if (line.equals("pwd")) {
-            System.out.println(currentDir.getAbsolutePath());
-            return true;
-        }
-
-        if (line.startsWith("type ")) {
-            String cmd = line.substring(5);
-            runType(cmd);
-            return true;
-        }
-
-        if (line.startsWith("cd ")) {
-            String dir = line.substring(3);
-            runCd(dir);
-            return true;
-            
-        }
-
-        return false; // not a builtin
+        return true; // not a builtin
     }
 
     public static void runCd(String dir) {
@@ -71,7 +68,8 @@ public class Builtins {
     }
 
     public static void runType(String cmd) {
-        if (isBuiltin(cmd)) {
+        CommandName command = CommandName.of(cmd);
+        if (command != null) {
             System.out.println(cmd + " is a shell builtin");
             return;
         }
