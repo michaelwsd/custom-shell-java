@@ -11,7 +11,7 @@ public class Main {
 
             if (line.isEmpty()) continue;
 
-            if (!Builtins.handle(line)) {
+            if (!Builtins.runCommand(line)) {
                 if (!Executor.runProgram(line)) {
                     System.out.println(line + ": command not found");
                 }

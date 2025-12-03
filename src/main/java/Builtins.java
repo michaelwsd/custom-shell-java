@@ -9,7 +9,7 @@ public class Builtins {
     private static File homeDir = new File(System.getenv("USERPROFILE"));
 
     // returns true if a builtin handled the line
-    public static boolean handle(String line) {
+    public static boolean runCommand(String line) {
         String[] parts = line.split("\\s+", 2);
         CommandName command = CommandName.of(parts[0]);
         String args = parts.length > 1 ? parts[1] : "";

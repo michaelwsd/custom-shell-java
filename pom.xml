@@ -15,6 +15,9 @@
         <java.version>25</java.version>
     </properties>
 
+    <dependencies>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
