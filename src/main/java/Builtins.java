@@ -17,10 +17,10 @@ public class Builtins {
         CommandName command = CommandName.of(parts[0]);
         String args = parts.length > 1 ? parts[1] : "";
         
-        if (command == null) return false;
-
         // add to history
-        historyList.add(parts[0]);
+        historyList.add(line);
+        
+        if (command == null) return false;
 
         switch (command) {
             case exit -> {
