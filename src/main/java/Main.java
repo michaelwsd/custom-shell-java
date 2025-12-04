@@ -3,12 +3,14 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.Log;
 import org.jline.reader.EndOfFileException;
 
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        try (Terminal terminal = TerminalBuilder.terminal()) {
+        try {
+            Terminal terminal = TerminalBuilder.builder().system(true).build();
             LineReader reader =
                     LineReaderBuilder.builder()
                             .terminal(terminal)
