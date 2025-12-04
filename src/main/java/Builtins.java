@@ -8,7 +8,7 @@ import java.util.List;
 public class Builtins {
 
     private static File currentDir = new File(System.getProperty("user.dir"));
-    private static File homeDir = new File(System.getenv("HOME"));
+    private static File homeDir = new File(System.getProperty("user.home"));
     private static List<String> historyList = new ArrayList<>();
 
     // returns true if a builtin handled the line
