@@ -62,8 +62,8 @@ public class Builtins {
     }
 
     public static void runEcho(String args) {
-        args = args.replace("'", "");
-        args = args.replace("\"", "");
+        args = args.replace("'", "").replace("\"", "");
+        args = String.join(" ", args.split("\\s+"));
 
         System.out.println(args);
     }
