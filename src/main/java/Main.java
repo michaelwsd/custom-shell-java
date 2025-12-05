@@ -4,7 +4,8 @@ public class Main {
     public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
-
+        clearScreen();
+        
         while (true) {
             System.out.print("$ ");
             String line = scanner.nextLine().strip();
@@ -17,5 +18,10 @@ public class Main {
                 }
             }
         }
+    }
+
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush(); // Forces the output to be written immediately
     }
 }

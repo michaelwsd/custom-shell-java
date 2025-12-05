@@ -41,9 +41,49 @@ public class Builtins {
             case history -> {
                 runHistory(args);
             }
+            case ls -> {
+                runLs(args);
+            } 
+            case clear -> {
+                Main.clearScreen();
+            }
         }
 
         return true; // not a builtin
+    }
+
+    public static File[] runLs(String args) {
+        
+        if (args.equals("")) {
+            File[] files = currentDir.listFiles();
+            if (files != null) {
+                listFiles(files);
+                return files;
+            } else {
+                System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
+            }
+        } else {
+            File givenDir = new File(args);
+            if (givenDir.exists()) {
+                File[] files = givenDir.listFiles();
+                listFiles(files);
+                return files;
+            } else {
+                System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
+            }
+        }
+
+        return null;
+    }
+
+    public static void listFiles(File[] files) {
+        for (File file : files) {
+            if (file.isFile()) {
+                System.out.println("File: " + file.getName());
+            } else if (file.isDirectory()) {
+                System.out.println("Directory: " + file.getName());
+            }
+        }
     }
 
     public static void runHistory(String args) {
