@@ -68,6 +68,7 @@ public class Builtins {
     }
 
     public static List<String> parseArgs(String line) {
+        line = line.replace("\"", "");
         List<String> args = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         boolean inSingleQuote = false;
