@@ -62,10 +62,42 @@ public class Builtins {
     }
 
     public static void runEcho(String args) {
-        args = args.replace("'", "").replace("\"", "");
-        args = String.join(" ", args.split("\\s+"));
+        List<String> parts = parseArgs(args);
 
-        System.out.println(args);
+        System.out.println(String.join(" ", parts));
+    }
+
+    public static List<String> parseArgs(String line) {
+        List<String> args = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inSingleQuote = false;
+    
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+    
+            if (c == '\'') {
+                inSingleQuote = !inSingleQuote; // toggle quote state
+                continue; 
+            }
+
+            if (Character.isWhitespace(c) && !inSingleQuote) {
+                // only compress if not in single quotes
+                if (current.length() > 0) {
+                    // add current string and set builder to empty string
+                    args.add(current.toString());
+                    current.setLength(0);
+                }
+            } else {
+                current.append(c);
+            }
+        }
+        
+        // add remaining
+        if (current.length() > 0) {
+            args.add(current.toString());
+        }
+    
+        return args;
     }
 
     public static void runCat(String args) {
