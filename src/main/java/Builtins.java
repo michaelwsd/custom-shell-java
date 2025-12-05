@@ -83,9 +83,9 @@ public class Builtins {
     
             } catch (NoSuchFileException e) {
                 // STDERR should NOT be redirected
-                System.out.println("cat: " + file + ": No such file or directory");
+                System.err.println("cat: " + file + ": No such file or directory");
             } catch (Exception e) {
-                System.out.println("cat: " + file + ": Error reading file");
+                System.err.println("cat: " + file + ": Error reading file");
             }
         }
     }
@@ -110,7 +110,7 @@ public class Builtins {
         // run command
         boolean handled = runCommand(command);
         if (!handled) {
-            Executor.runProgram(command);   
+            Executor.runProgram(command);
         }
 
         // restore original output
