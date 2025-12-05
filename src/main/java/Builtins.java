@@ -77,7 +77,7 @@ public class Builtins {
                 String content = new String(info);
     
                 // print to stdout (this may be redirected)
-                System.out.println(content);
+                System.out.print(content);
     
                 combinedOutput.append(content);
     
@@ -168,30 +168,6 @@ public class Builtins {
             System.err.println("ls: " + pathStr + ": Error reading directory");
         }
     }
-
-    // public static File[] runLs(String args) {
-        
-    //     if (args.isEmpty()) {
-    //         File[] files = currentDir.listFiles();
-    //         if (files != null) {
-    //             listFiles(files);
-    //             return files;
-    //         } else {
-    //             System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
-    //         }
-    //     } else {
-    //         File givenDir = new File(args);
-    //         if (givenDir.exists()) {
-    //             File[] files = givenDir.listFiles();
-    //             listFiles(files);
-    //             return files;
-    //         } else {
-    //             System.out.println("Could not list files, possibly due to an I/O error or the path not being a directory.");
-    //         }
-    //     }
-
-    //     return null;
-    // }
 
     public static void listFiles(File[] files) {
         for (File file : files) {
