@@ -1,29 +1,14 @@
 import java.util.Scanner;
 
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.impl.DefaultParser;
-import org.jline.reader.impl.completer.StringsCompleter;
-import org.jline.terminal.TerminalBuilder;
-
 public class Main {
     public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
         clearScreen();
-        var terminal = TerminalBuilder.builder().system(true).build();
-
-        var parser = new DefaultParser();
-        parser.setEscapeChars(new char[0]);
-        var stringsCompleter = new StringsCompleter("echo", "exit");
-        var lineReader =
-                LineReaderBuilder.builder()
-                        .terminal(terminal)
-                        .completer(stringsCompleter)
-                        .parser(parser)
-                        .build();
 
         while (true) {
-            String line = lineReader.readLine("$ ");
+            System.out.print("$ ");
+            String line = scanner.nextLine().strip();
 
             if (line.isEmpty()) continue;
             if (Builtins.handleRedirection(line, ">>")) continue;
