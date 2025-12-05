@@ -6,7 +6,8 @@ enum CommandName {
     cd,
     history,
     ls,
-    clear;
+    clear,
+    cat;
 
     static CommandName of(String name) {
         try {

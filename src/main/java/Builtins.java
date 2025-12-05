@@ -1,5 +1,8 @@
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ public class Builtins {
         // add to history
         historyList.add(line);
 
+        // not a built-in method
         if (command == null) return false;
 
         switch (command) {
@@ -47,14 +51,82 @@ public class Builtins {
             case clear -> {
                 Main.clearScreen();
             }
+            case cat -> {
+                runCat(args);
+            }
         }
 
-        return true; // not a builtin
+        return true; 
+    }
+
+    public static String runCat(String args) {
+        if (args.isEmpty()) {
+            System.err.println("cat: missing operand");
+            return null;
+        }
+    
+        StringBuilder combinedOutput = new StringBuilder();
+        String[] files = args.split("\\s+");
+    
+        for (String file : files) {
+            Path p = Paths.get(file);
+    
+            try {
+                byte[] info = Files.readAllBytes(p);
+                String content = new String(info);
+    
+                // print to stdout (this may be redirected)
+                System.out.println(content);
+    
+                combinedOutput.append(content);
+    
+            } catch (NoSuchFileException e) {
+                // STDERR should NOT be redirected
+                System.err.println("cat: " + file + ": No such file or directory");
+            } catch (Exception e) {
+                System.err.println("cat: " + file + ": Error reading file");
+            }
+        }
+    
+        return combinedOutput.toString();
+    }
+
+    public static boolean handleRedirection(String line) {
+        String[] parts = line.split(">", 2);
+        String command = parts[0].trim(), fileName = parts[1].trim();
+
+        if (command.endsWith("1")) {
+            command = command.substring(0, command.length()-1).trim();
+        }
+
+        File outputFile = new File(fileName);
+
+        PrintStream originalOutput = System.out;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(buffer)); // print output to buffer instead of terminal 
+
+        // run command
+        boolean handled = runCommand(command);
+        if (!handled) {
+            Executor.runProgram(command);   
+        }
+
+        // restore original output
+        System.setOut(originalOutput);
+
+        // write to file 
+        try {
+            Files.write(outputFile.toPath(), buffer.toByteArray());
+        } catch (Exception e) {
+            System.err.println("redirection error: " + e.getMessage());
+        }
+
+        return false;
     }
 
     public static File[] runLs(String args) {
         
-        if (args.equals("")) {
+        if (args.isEmpty()) {
             File[] files = currentDir.listFiles();
             if (files != null) {
                 listFiles(files);

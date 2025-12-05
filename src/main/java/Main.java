@@ -5,13 +5,15 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         clearScreen();
-        
+
         while (true) {
             System.out.print("$ ");
             String line = scanner.nextLine().strip();
 
             if (line.isEmpty()) continue;
+            if (Builtins.handleRedirection(line)) continue;
 
+            // check for command
             if (!Builtins.runCommand(line)) {
                 if (!Executor.runProgram(line)) {
                     System.out.println(line + ": command not found");
