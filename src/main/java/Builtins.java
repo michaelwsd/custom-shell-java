@@ -68,23 +68,25 @@ public class Builtins {
     }
 
     public static List<String> parseArgs(String line) {
-        line = line.replace("\"", "");
         List<String> args = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         boolean inSingleQuote = false;
+        boolean inDoubleQuote = false;
     
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
     
-            if (c == '\'') {
-                inSingleQuote = !inSingleQuote; // toggle quote state
-                continue; 
+            if (c == '\'' && !inDoubleQuote) { // toggle single quote
+                inSingleQuote = !inSingleQuote;
+                continue;
+            } 
+            if (c == '"' && !inSingleQuote) { // toggle double quote
+                inDoubleQuote = !inDoubleQuote;
+                continue;
             }
-
-            if (Character.isWhitespace(c) && !inSingleQuote) {
-                // only compress if not in single quotes
+    
+            if (Character.isWhitespace(c) && !inSingleQuote && !inDoubleQuote) {
                 if (current.length() > 0) {
-                    // add current string and set builder to empty string
                     args.add(current.toString());
                     current.setLength(0);
                 }
@@ -92,14 +94,13 @@ public class Builtins {
                 current.append(c);
             }
         }
-        
-        // add remaining
+    
         if (current.length() > 0) {
             args.add(current.toString());
         }
     
         return args;
-    }
+    }    
 
     public static void runCat(String args) {
         if (args.isEmpty()) {
