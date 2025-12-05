@@ -107,7 +107,7 @@ public class Builtins {
         }
     
         StringBuilder combinedOutput = new StringBuilder();
-        String[] files = args.split("\\s+");
+        List<String> files = parseArgs(args);
     
         for (String file: files) {
             Path p = Paths.get(file);
